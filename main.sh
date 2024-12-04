@@ -1,3 +1,3 @@
 #!/bin/zsh
-go build
-./rss-blog-aggregator
+go build -C src -o ../build/gator
+./build/gator $1 $2
