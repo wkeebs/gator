@@ -1,4 +1,3 @@
-#!/usr/bin/zsh
-rm build/*
-go build -C src -o ../build/aggregator 
-./build/aggregator
+#!/bin/zsh
+go build
+./rss-blog-aggregator
