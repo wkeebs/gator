@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/wkeebs/rss-blog-aggregator/internal/database"
+	"github.com/wkeebs/gator/internal/database"
 )
 
 type command struct {

@@ -7,8 +7,8 @@ import (
 	"os"
 
 	_ "github.com/lib/pq" // postgres driver: ignore
-	"github.com/wkeebs/rss-blog-aggregator/internal/config"
-	"github.com/wkeebs/rss-blog-aggregator/internal/database"
+	"github.com/wkeebs/gator/internal/config"
+	"github.com/wkeebs/gator/internal/database"
 )
 
 func main() {

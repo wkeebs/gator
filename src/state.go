@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/wkeebs/rss-blog-aggregator/internal/config"
-	"github.com/wkeebs/rss-blog-aggregator/internal/database"
+	"github.com/wkeebs/gator/internal/config"
+	"github.com/wkeebs/gator/internal/database"
 )
 
 type state struct {

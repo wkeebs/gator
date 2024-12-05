@@ -1,4 +1,4 @@
-module github.com/wkeebs/rss-blog-aggregator
+module github.com/wkeebs/gator
 
 go 1.23.3
 
