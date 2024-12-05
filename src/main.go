@@ -1,11 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
+	_ "github.com/lib/pq" // postgres driver: ignore
 	"github.com/wkeebs/rss-blog-aggregator/internal/config"
+	"github.com/wkeebs/rss-blog-aggregator/internal/database"
 )
 
 func main() {
@@ -14,8 +17,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// connect to database
+	db, err := sql.Open("postgres", configStruct.DbUrl)
+	dbQueries := database.New(db)
+
 	// initialise state and commands
-	appState := state{cfg: &configStruct}
+	appState := state{
+		db:  dbQueries,
+		cfg: &configStruct,
+	}
 	appCommands := commands{cmdMap: make(map[string]func(*state, command) error)}
 	appCommands.register("login", handlerLogin)
 
@@ -35,6 +45,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Config:", appState.cfg)
+	fmt.Println(appState.cfg)
 	os.Exit(0)
 }

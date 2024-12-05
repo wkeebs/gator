@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 )
 
@@ -10,6 +11,14 @@ const configFileName = ".gatorconfig.json"
 type Config struct {
 	DbUrl           string `json:"db_url"`
 	CurrentUserName string `json:"current_user_name"`
+}
+
+func (c Config) String() string {
+	stringer := "~~ CONFIG ~~\n"
+	stringer += fmt.Sprintf("-- Username: %s\n", c.CurrentUserName)
+	stringer += fmt.Sprintf("-- Database URL: %s\n", c.DbUrl)
+
+	return stringer
 }
 
 func getConfigFilePath() (string, error) {
