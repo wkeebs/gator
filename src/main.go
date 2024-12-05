@@ -34,6 +34,7 @@ func main() {
 	appCommands.register("agg", handleAggregator)
 	appCommands.register("addfeed", handleAddFeed)
 	appCommands.register("feeds", handleFeeds)
+	appCommands.register("follow", handlerFollow)
 
 	// get arguments from user
 	userArgs := os.Args
