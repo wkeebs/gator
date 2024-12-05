@@ -35,6 +35,7 @@ func main() {
 	appCommands.register("addfeed", middlewareLoggedIn(handlerAddFeed))
 	appCommands.register("feeds", handlerFeeds)
 	appCommands.register("follow", middlewareLoggedIn(handlerFollow))
+	appCommands.register("unfollow", middlewareLoggedIn(handlerUnfollow))
 	appCommands.register("following", middlewareLoggedIn(handlerFollowing))
 
 	// get arguments from user

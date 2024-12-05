@@ -25,3 +25,8 @@ SELECT *,
     (SELECT feeds.name FROM feeds WHERE feeds.id = feed_follows.feed_id) as feed_name
 FROM feed_follows
 WHERE feed_follows.user_id = $1;
+
+-- name: DeleteFeedFollow :exec
+DELETE FROM feed_follows
+WHERE feed_follows.user_id = $1
+AND (SELECT feeds.id FROM feeds WHERE feeds.url = $2) = feed_follows.feed_id;
