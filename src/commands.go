@@ -85,3 +85,11 @@ func handlerRegister(s *state, cmd command) error {
 
 	return nil
 }
+
+func handlerReset(s *state, _ command) error {
+	err := s.db.ResetUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("Failed to reset: %s", err)
+	}
+	return nil
+}
