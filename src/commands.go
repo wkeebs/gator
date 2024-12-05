@@ -155,9 +155,21 @@ func handleAddFeed(s *state, cmd command) error {
 		Url:       url,
 		UserID:    user.ID,
 	}
+
 	feed, err := s.db.CreateFeed(context.Background(), params)
 	if err != nil {
 		return fmt.Errorf("Failed to create feed: %s", err)
+	}
+
+	// automatically create a feed follows entry
+	new_args := []string{url}
+	new_cmd := command{
+		name: "follow",
+		args: new_args,
+	}
+	err = handlerFollow(s, new_cmd)
+	if err != nil {
+		return fmt.Errorf("Failed to add feed follows: %s", err)
 	}
 
 	fmt.Println("Feed added succesfully.")
@@ -220,7 +232,7 @@ func handlerFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerFollows(s *state, _ command) error {
+func handlerFollowing(s *state, _ command) error {
 	// gets all feeds followed by a user
 	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
 	if err != nil {

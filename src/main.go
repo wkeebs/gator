@@ -35,7 +35,7 @@ func main() {
 	appCommands.register("addfeed", handleAddFeed)
 	appCommands.register("feeds", handleFeeds)
 	appCommands.register("follow", handlerFollow)
-	appCommands.register("follows", handlerFollows)
+	appCommands.register("following", handlerFollowing)
 
 	// get arguments from user
 	userArgs := os.Args
