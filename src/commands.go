@@ -219,3 +219,22 @@ func handlerFollow(s *state, cmd command) error {
 
 	return nil
 }
+
+func handlerFollows(s *state, _ command) error {
+	// gets all feeds followed by a user
+	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("Failed to retrieve user: %s", err)
+	}
+
+	follows, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
+	if err != nil {
+		return fmt.Errorf("Failed to get feed follows for user: %s", err)
+	}
+
+	for _, f := range follows {
+		fmt.Println(f)
+	}
+
+	return nil
+}
