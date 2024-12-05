@@ -90,7 +90,7 @@ func handlerRegister(s *state, cmd command) error {
 
 func handlerReset(s *state, _ command) error {
 	// resets the state of the database - DEV ONLY
-	err := s.db.ResetUsers(context.Background())
+	err := s.db.DeleteUsers(context.Background())
 	if err != nil {
 		return fmt.Errorf("Failed to reset users: %s", err)
 	}
