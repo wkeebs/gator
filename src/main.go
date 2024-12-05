@@ -31,6 +31,7 @@ func main() {
 	appCommands.register("register", handlerRegister)
 	appCommands.register("reset", handlerReset)
 	appCommands.register("users", handlerUsers)
+	appCommands.register("agg", handleAggregator)
 
 	// get arguments from user
 	userArgs := os.Args

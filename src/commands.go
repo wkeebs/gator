@@ -114,3 +114,13 @@ func handlerUsers(s *state, _ command) error {
 
 	return nil
 }
+
+
+func handleAggregator(s *state, _ command) error {
+	rssFeed, err := fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
+	if err != nil {
+		return err
+	}
+	fmt.Println(rssFeed)
+	return nil
+}
