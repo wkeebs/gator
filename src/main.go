@@ -30,6 +30,7 @@ func main() {
 	appCommands.register("login", handlerLogin)
 	appCommands.register("register", handlerRegister)
 	appCommands.register("reset", handlerReset)
+	appCommands.register("users", handlerUsers)
 
 	// get arguments from user
 	userArgs := os.Args
@@ -47,6 +48,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(appState.cfg)
+	// fmt.Println(appState.cfg)
 	os.Exit(0)
 }

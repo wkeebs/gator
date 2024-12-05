@@ -31,6 +31,7 @@ func (c *commands) run(s *state, cmd command) error {
 }
 
 func handlerLogin(s *state, cmd command) error {
+	// logs a user into the application
 	if len(cmd.args) == 0 {
 		return fmt.Errorf("Login failed, please provide a username.")
 	}
@@ -53,6 +54,7 @@ func handlerLogin(s *state, cmd command) error {
 }
 
 func handlerRegister(s *state, cmd command) error {
+	// registers a user in the database
 	if len(cmd.args) == 0 {
 		return fmt.Errorf("Register failed, please provide a name.")
 	}
@@ -80,16 +82,35 @@ func handlerRegister(s *state, cmd command) error {
 		return fmt.Errorf("Failed to register user '%s': %s", name, err)
 	}
 
-	fmt.Println("User was created successfully.")
+	fmt.Printf("User '%s' was created successfully.\n", name)
 	fmt.Println(user)
 
 	return nil
 }
 
 func handlerReset(s *state, _ command) error {
+	// resets the state of the users in the database - DEV ONLY
 	err := s.db.ResetUsers(context.Background())
 	if err != nil {
 		return fmt.Errorf("Failed to reset: %s", err)
 	}
+	return nil
+}
+
+func handlerUsers(s *state, _ command) error {
+	// lists all users
+	users, err := s.db.GetUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("Failed to get users: %s", err)
+	}
+
+	for _, u := range users {
+		if u.Name == s.cfg.CurrentUserName {
+			fmt.Printf("* %s (current)\n", u.Name)
+		} else {
+			fmt.Printf("* %s\n", u.Name)
+		}
+	}
+
 	return nil
 }
