@@ -115,12 +115,42 @@ func handlerUsers(s *state, _ command) error {
 	return nil
 }
 
-
 func handleAggregator(s *state, _ command) error {
 	rssFeed, err := fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
 	if err != nil {
 		return err
 	}
 	fmt.Println(rssFeed)
+	return nil
+}
+
+func handleAddFeed(s *state, cmd command) error {
+	// adds a feed to the database
+	if len(cmd.args) != 2 {
+		return fmt.Errorf("Usage: addfeed <name> <url>")
+	}
+
+	// get current user for their ID
+	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("Failed to retrieve user: %s", err)
+	}
+
+	// add feed to database
+	name := cmd.args[0]
+	url := cmd.args[1]
+	params := database.CreateFeedParams{
+		Name:   name,
+		Url:    url,
+		UserID: user.ID,
+	}
+	feed, err := s.db.CreateFeed(context.Background(), params)
+	if err != nil {
+		return fmt.Errorf("Failed to create feed: %s", err)
+	}
+
+	fmt.Println("Feed added succesfully.")
+	fmt.Println(feed)
+
 	return nil
 }
