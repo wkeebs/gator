@@ -89,11 +89,17 @@ func handlerRegister(s *state, cmd command) error {
 }
 
 func handlerReset(s *state, _ command) error {
-	// resets the state of the users in the database - DEV ONLY
+	// resets the state of the database - DEV ONLY
 	err := s.db.ResetUsers(context.Background())
 	if err != nil {
-		return fmt.Errorf("Failed to reset: %s", err)
+		return fmt.Errorf("Failed to reset users: %s", err)
 	}
+
+	err = s.db.ResetFeeds(context.Background())
+	if err != nil {
+		return fmt.Errorf("Failed to reset feeds: %s", err)
+	}
+
 	return nil
 }
 
@@ -116,6 +122,7 @@ func handlerUsers(s *state, _ command) error {
 }
 
 func handleAggregator(s *state, _ command) error {
+	// main aggregator handler
 	rssFeed, err := fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
 	if err != nil {
 		return err
@@ -151,6 +158,22 @@ func handleAddFeed(s *state, cmd command) error {
 
 	fmt.Println("Feed added succesfully.")
 	fmt.Println(feed)
+
+	return nil
+}
+
+func handleFeeds(s *state, _ command) error {
+	// lists all feeds
+	feeds, err := s.db.GetFeeds(context.Background())
+	if err != nil {
+		return fmt.Errorf("Failed to get feeds: %s", err)
+	}
+
+	for _, f := range feeds {
+		fmt.Printf("%s:\n", f.Name)
+		fmt.Printf("* URL: %s\n", f.Url)
+		fmt.Printf("* Created By: %s\n", f.UserName)
+	}
 
 	return nil
 }
