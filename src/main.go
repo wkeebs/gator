@@ -28,6 +28,7 @@ func main() {
 	}
 	appCommands := commands{cmdMap: make(map[string]func(*state, command) error)}
 	appCommands.register("login", handlerLogin)
+	appCommands.register("register", handlerRegister)
 
 	// get arguments from user
 	userArgs := os.Args
