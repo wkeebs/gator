@@ -118,7 +118,7 @@ func handlerUsers(s *state, _ command) error {
 	return nil
 }
 
-func handleAggregator(s *state, _ command) error {
+func handlerAggregator(s *state, _ command) error {
 	// main aggregator handler
 	rssFeed, err := fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
 	if err != nil {
@@ -128,16 +128,10 @@ func handleAggregator(s *state, _ command) error {
 	return nil
 }
 
-func handleAddFeed(s *state, cmd command) error {
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	// adds a feed to the database
 	if len(cmd.args) != 2 {
 		return fmt.Errorf("Usage: addfeed <name> <url>")
-	}
-
-	// get current user for their ID
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("Failed to retrieve user: %s", err)
 	}
 
 	// add feed to database
@@ -167,7 +161,7 @@ func handleAddFeed(s *state, cmd command) error {
 		name: "follow",
 		args: new_args,
 	}
-	err = handlerFollow(s, new_cmd)
+	err = handlerFollow(s, new_cmd, user)
 	if err != nil {
 		return fmt.Errorf("Failed to add feed follows: %s", err)
 	}
@@ -178,7 +172,7 @@ func handleAddFeed(s *state, cmd command) error {
 	return nil
 }
 
-func handleFeeds(s *state, _ command) error {
+func handlerFeeds(s *state, _ command) error {
 	// lists all feeds
 	feeds, err := s.db.GetFeeds(context.Background())
 	if err != nil {
@@ -194,7 +188,7 @@ func handleFeeds(s *state, _ command) error {
 	return nil
 }
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 	// add a feed to the current user's following
 	if len(cmd.args) != 1 {
 		return fmt.Errorf("Usage: follow <url>")
@@ -204,12 +198,6 @@ func handlerFollow(s *state, cmd command) error {
 	feed, err := s.db.GetFeedByURL(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("Failed to get feed by url: %s", err)
-	}
-
-	// get current user for their ID
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("Failed to retrieve user: %s", err)
 	}
 
 	now := time.Now().UTC()
@@ -232,13 +220,8 @@ func handlerFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerFollowing(s *state, _ command) error {
+func handlerFollowing(s *state, _ command, user database.User) error {
 	// gets all feeds followed by a user
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("Failed to retrieve user: %s", err)
-	}
-
 	follows, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return fmt.Errorf("Failed to get feed follows for user: %s", err)

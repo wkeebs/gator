@@ -31,11 +31,11 @@ func main() {
 	appCommands.register("register", handlerRegister)
 	appCommands.register("reset", handlerReset)
 	appCommands.register("users", handlerUsers)
-	appCommands.register("agg", handleAggregator)
-	appCommands.register("addfeed", handleAddFeed)
-	appCommands.register("feeds", handleFeeds)
-	appCommands.register("follow", handlerFollow)
-	appCommands.register("following", handlerFollowing)
+	appCommands.register("agg", handlerAggregator)
+	appCommands.register("addfeed", middlewareLoggedIn(handlerAddFeed))
+	appCommands.register("feeds", handlerFeeds)
+	appCommands.register("follow", middlewareLoggedIn(handlerFollow))
+	appCommands.register("following", middlewareLoggedIn(handlerFollowing))
 
 	// get arguments from user
 	userArgs := os.Args
