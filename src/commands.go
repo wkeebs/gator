@@ -118,14 +118,22 @@ func handlerUsers(s *state, _ command) error {
 	return nil
 }
 
-func handlerAggregator(s *state, _ command) error {
+func handlerAggregator(s *state, cmd command) error {
 	// main aggregator handler
-	rssFeed, err := fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
-	if err != nil {
-		return err
+	if len(cmd.args) != 1 {
+		return fmt.Errorf("Usage: agg <time_between_reqs - i.e., 1s, 1m, 1h>")
 	}
-	fmt.Println(rssFeed)
-	return nil
+
+	timeBetweenRequests, err := time.ParseDuration(cmd.args[0])
+	if err != nil {
+		return fmt.Errorf("Failed to parse time: %s", err)
+	}
+	fmt.Printf("Collecting feeds every: %s", timeBetweenRequests)
+
+	ticker := time.NewTicker(timeBetweenRequests)
+	for ; ; <-ticker.C {
+		scrapeFeeds(s)
+	}
 }
 
 func handlerAddFeed(s *state, cmd command, user database.User) error {

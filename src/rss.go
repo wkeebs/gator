@@ -95,7 +95,7 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	return &rssFeed, nil
 }
 
-func scrapeFeeds(s *state, ctx context.Context) error {
+func scrapeFeeds(s *state) error {
 	background := context.Background()
 
 	// get next feed
