@@ -128,7 +128,7 @@ func handlerAggregator(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("Failed to parse time: %s", err)
 	}
-	fmt.Printf("Collecting feeds every: %s", timeBetweenRequests)
+	fmt.Printf("Collecting feeds every: %s\n", timeBetweenRequests)
 
 	ticker := time.NewTicker(timeBetweenRequests)
 	for ; ; <-ticker.C {

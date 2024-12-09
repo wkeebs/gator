@@ -8,6 +8,10 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/wkeebs/gator/internal/database"
 )
 
 type RSSFeed struct {
@@ -112,10 +116,25 @@ func scrapeFeeds(s *state) error {
 
 	// print items in feed
 	for _, item := range feed.Channel.Item {
-		fmt.Println(item)
+		now := time.Now()
+		params := database.CreatePostParams{
+			ID:          uuid.New(),
+			CreatedAt:   now,
+			UpdatedAt:   now,
+			Title:       item.Title,
+			Url:         item.Link,
+			Description: item.Description,
+			PublishedAt: item.PubDate,
+			FeedID:      nextFeedToFetch.ID,
+		}
+		_, err := s.db.CreatePost(background, params)
+		if err != nil {
+			return fmt.Errorf("Failed to add post: %s", err)
+		}
+		fmt.Printf("Added post: %s\n", item.Link)
 	}
 
-	// mark it as fetched
+	// mark feed as fetched
 	err = s.db.MarkFeedFetched(background, nextFeedToFetch.ID)
 	if err != nil {
 		return fmt.Errorf("Failed to mark feed as fetched: %s", err)
